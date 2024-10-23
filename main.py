@@ -113,6 +113,10 @@ clock = pygame.time.Clock()
 running = True
 game_over_state = False  # Game over state
 time.sleep(2)  # Add a 2-second delay before starting the game
+
+# Keep track of key presses
+keys_pressed = {"left": False, "right": False}
+
 while running:
     clock.tick(60)  # Limit the game to 60 FPS
 
@@ -123,12 +127,12 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-        # Controlling the player movement
+        # Controlling the player movement with key presses
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                player_Xchange = -1.7
+                keys_pressed["left"] = True
             if event.key == pygame.K_RIGHT:
-                player_Xchange = 1.7
+                keys_pressed["right"] = True
             if event.key == pygame.K_SPACE and not game_over_state:
                 # Shoot a new bullet regardless of current bullet state
                 bullet_X = player_X
@@ -142,7 +146,18 @@ while running:
                 reset_game()
 
         if event.type == pygame.KEYUP:
-            player_Xchange = 0
+            if event.key == pygame.K_LEFT:
+                keys_pressed["left"] = False
+            if event.key == pygame.K_RIGHT:
+                keys_pressed["right"] = False
+
+    # Update player movement based on keys pressed
+    if keys_pressed["left"]:
+        player_Xchange = -1.7
+    elif keys_pressed["right"]:
+        player_Xchange = 1.7
+    else:
+        player_Xchange = 0
 
     # adding the change in the player position
     player_X += player_Xchange
